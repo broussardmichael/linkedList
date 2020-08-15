@@ -1,0 +1,26 @@
+{
+  "name": "linkedlist",
+  "version": "1.0.0",
+  "description": "A simple linked list",
+  "main": "linkedList.js",
+  "scripts": {
+    "test": "linkedListTest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/broussardmichael/linkedList.git"
+  },
+  "keywords": [
+    "linkedlist"
+  ],
+  "author": "Michael Broussard",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/broussardmichael/linkedList/issues"
+  },
+  "homepage": "https://github.com/broussardmichael/linkedList#readme",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.1.1"
+  }
+}
