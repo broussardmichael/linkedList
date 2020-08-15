@@ -4,7 +4,7 @@
   "description": "A simple linked list",
   "main": "linkedList.js",
   "scripts": {
-    "test": "linkedListTest.js"
+    "test": "mocha --Reporter spec --debug"
   },
   "repository": {
     "type": "git",

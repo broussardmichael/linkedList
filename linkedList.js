@@ -10,38 +10,85 @@ module.exports = (function (){
 
     class LinkedList {
         constructor(head = null) {
-            this.head = head
+            this.head = head;
+            this.deleteNode = deleteNode;
+            this.getTailNode = getTailNode;
+            this.getNodeCountFromList = getNodeCountFromList;
+            this.isTheNodeInTheListByData = isTheNodeInTheListByData;
         }
     }
 
-    function deleteNode (node){
+    function validateNodeArgumentForOperations (node) {
         if(node == null)
-            throw "Unable to delete node, node was not given."
-        let nextNode = node.nextNode;
-        let prevNode = node.prevNode;
-        prevNode.nextNode = nextNode;
-        nextNode.prevNode = prevNode;
+            throw "A node is required to perform operations."
+    }
+
+    function validateListArgumentForOperations (list) {
+        if(list.head == null)
+            throw "List hasn't been constructed. Build a list before work can be done."
+    }
+
+    function deleteNode (node){
+        let list = this;
+        validateNodeArgumentForOperations(node);
+        validateListArgumentForOperations(list);
+
+        if(!list.isTheNodeInTheListByData(node))
+            throw "Unable to delete node, the node was not found in the list by its data.";
+
+        if(list.getNodeCountFromList() === 1) {
+            list.head = null;
+        } else {
+            let nextNode = node.nextNode, prevNode = node.prevNode;
+            if(node.prevNode == null){
+                nextNode.prevNode = null;
+                list.head = nextNode;
+            } else {
+                prevNode = node.prevNode;
+                prevNode.nextNode = nextNode;
+                if(nextNode !== null)
+                    nextNode.prevNode = prevNode;
+            }
+        }
         delete node;
     }
 
-    function getTailNode () {
-        if(this.list == null)
-            throw "List hasn't been constructed. Build a list before work can be done."
+    function isTheNodeInTheListByData (node){
+        let list = this, found = false;
+        let head = list.head;
 
-        let node = this.head;
-        let tailNode;
+        validateNodeArgumentForOperations(node);
+        validateListArgumentForOperations(list);
+
+        return checkForNodeInList(node, head);
+    }
+
+    function checkForNodeInList (nodeToFind, currentNode) {
+        if(currentNode.data === nodeToFind.data)
+            return true;
+
+        if(currentNode.nextNode != null)
+            return checkForNodeInList(nodeToFind, currentNode.nextNode);
+        else
+            return false;
+    }
+
+    function getTailNode () {
+        let list = this;
+        validateListArgumentForOperations(list);
+
+        let node = list.head;
         while(node.nextNode != null) {
-            tailNode = node;
             node = node.nextNode;
         }
         return node;
     }
 
     function getNodeCountFromList () {
-        if(this.list == null)
-            throw "List hasn't been constructed. Build a list before work can be done."
+        let list = this;
+        validateListArgumentForOperations(list);
 
-        let node = this.head;
+        let node = list.head;
         let count = 1;
         while(node.nextNode != null) {
             node = node.nextNode;
@@ -50,19 +97,16 @@ module.exports = (function (){
         return count;
     }
 
-    linkedListModule.createNewListWithNumArray = function(numberArray){
-        if(Array.isArray(numberArray) && numberArray.length > 0)
+    linkedListModule.createLinkedListFromDataArray = function(dataArray){
+        if(!Array.isArray(dataArray) || (Array.isArray(dataArray) && dataArray.length === 0))
             throw("A array of numbers is required.");
 
         let list = {};
-        for(let i = 0; i < numberArray.length; i++){
+        for(let i = 0; i < dataArray.length; i++){
             if(i === 0) {
-                list = new LinkedList(new Node(numberArray[i]));
-                list.deleteNode = deleteNode;
-                list.getTailNode = getTailNode;
-                list.getNodeCountFromList = getNodeCountFromList;
+                list = new LinkedList(new Node(dataArray[i]));
             } else {
-                let node = new Node(numberArray[i]);
+                let node = new Node(dataArray[i]);
                 let tailNode = list.getTailNode();
                 tailNode.nextNode = node;
                 node.prevNode = tailNode;
